@@ -14,13 +14,19 @@ export default class Card extends Component {
     // })
   }
 
+  getCroppedView(txt) {
+    const limit = 180
+    const re = new RegExp('(^.{' + (limit - 1) + '}([^ ]+|\\s))(.*)')
+    return txt.replace(re, '$1') + '...'
+  }
+
   render() {
     const { title, release_date, vote_average, overview, genres, imgPath } =
       this.props
     return (
       <div className={classes.card}>
         <div className={classes.cardImg}>
-          <img src={`https://image.tmdb.org/t/p/w500/${imgPath}`} alt={title} />
+          <img src={`https://image.tmdb.org/t/p/w500${imgPath}`} alt={title} />
         </div>
         <div className={classes.content}>
           <header className={classes.contentTop}>
@@ -39,7 +45,9 @@ export default class Card extends Component {
               )
             })}
           </ul>
-          <div className={classes.description}>{overview}</div>
+          <div className={classes.description}>
+            {this.getCroppedView(overview)}
+          </div>
           <Rate allowHalf></Rate>
         </div>
       </div>
