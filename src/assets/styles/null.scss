@@ -1,0 +1,95 @@
+* {
+  padding: 0;
+  margin: 0;
+  border: 0;
+  box-sizing: border-box;
+}
+*:before,
+*:after {
+  box-sizing: border-box;
+  //
+}
+:focus,
+:active {
+  // outline: none;
+}
+a:focus,
+a:active {
+}
+html,
+body {
+}
+body {
+}
+input,
+button,
+textarea {
+  font-family: Roboto, sans-serif;
+
+  font-size: inherit;
+}
+textarea {
+  resize: none;
+}
+button {
+  cursor: pointer;
+  color: inherit;
+  background-color: inherit;
+}
+a {
+  color: inherit;
+  cursor: pointer;
+}
+a:link,
+a:visited {
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: none;
+}
+ul li {
+  list-style: none;
+}
+img {
+  vertical-align: top;
+
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: inherit;
+  font-size: inherit;
+}
+
+//page__content-wrap::-webkit-scrollbar {
+//  width: 5px;
+//}
+
+body {
+  &::-webkit-scrollbar{
+    width: 1px;
+
+  }
+
+
+  &::-webkit-scrollbar-thumb{
+
+    width: 1px;
+    background-color: rgba(126, 126, 130, 0.49);
+    border-radius: 10%;
+  }
+
+  &::-webkit-scrollbar-track {
+    //box-shadow: inset 0 0 5px grey;
+    //border-radius: 50%;
+  }
+
+  &::-webkit-scrollbar-button{
+
+  }
+}
+
+

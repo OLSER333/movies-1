@@ -15,7 +15,7 @@ export default class Card extends Component {
   }
 
   getCroppedView(txt) {
-    const limit = 180
+    const limit = 120
     const re = new RegExp('(^.{' + (limit - 1) + '}([^ ]+|\\s))(.*)')
     return txt.replace(re, '$1') + '...'
   }
@@ -48,7 +48,7 @@ export default class Card extends Component {
           <div className={classes.description}>
             {this.getCroppedView(overview)}
           </div>
-          <Rate allowHalf></Rate>
+          <Rate count={10} allowHalf></Rate>
         </div>
       </div>
     )

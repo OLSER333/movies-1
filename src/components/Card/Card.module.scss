@@ -1,10 +1,18 @@
+$mobile: 1000px;
+
 .card {
   display: flex;
   align-items: flex-start;
 
-
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   max-width: 450px;
+  max-height: 285px;
+  @media (max-width:$mobile) {
+    max-width: none;
+  }
 }
+
+
 
 .cardImg {
   flex: 0 0 40%;
@@ -14,6 +22,11 @@
     object-fit: contain;
     vertical-align: top;
   }
+  
+  @media (max-width:$mobile) {
+    flex: 0 1 auto;
+    width: 240px;
+  }
 }
 
 .content {
@@ -21,6 +34,11 @@
   flex-direction: column;
   gap: 10px;
   padding: 20px;
+  height: 100%;
+  
+  @media (max-width:$mobile) {
+    width: 100%;
+  }
 }
 
 
