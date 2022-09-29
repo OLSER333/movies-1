@@ -1,7 +1,10 @@
 import React, { Component } from 'react'
 import { Rate } from 'antd'
 import { format } from 'date-fns'
+
 import '../../assets/styles/global.css'
+import posterDefault from '../../assets/images/no-poster.png'
+// import MyImg from '../MyImg/MyImg'
 
 import classes from './Card.module.scss'
 
@@ -20,13 +23,29 @@ export default class Card extends Component {
     return txt.replace(re, '$1') + '...'
   }
 
+  // getPosterPath(path) {
+  //   return fetch(path).then((res) => {
+  //     console.log('res', res)
+  //     return
+  //   })
+  // }
+
   render() {
     const { title, release_date, vote_average, overview, genres, imgPath } =
       this.props
     return (
       <div className={classes.card}>
         <div className={classes.cardImg}>
-          <img src={`https://image.tmdb.org/t/p/w500${imgPath}`} alt={title} />
+          <img
+            // src={this.getPosterPath}
+            src={
+              imgPath
+                ? `https://image.tmdb.org/t/p/w500${imgPath}`
+                : posterDefault
+            }
+            alt={title}
+          />
+          {/*<MyImg path={`https://image.tmdb.org/t/p/w500${imgPath}`}></MyImg>*/}
         </div>
         <div className={classes.content}>
           <header className={classes.contentTop}>
@@ -34,19 +53,21 @@ export default class Card extends Component {
             <p className={classes.rateValue}>{vote_average.toFixed(1)}</p>
           </header>
           <div className={classes.date}>
-            {format(new Date(release_date.split('-')), 'MMMM q, yyyy')}
+            {release_date &&
+              format(new Date(release_date.split('-')), 'MMMM q, yyyy')}
           </div>
           <ul className={classes.genresList}>
-            {genres.map((el) => {
-              return (
-                <li className={classes.genresItem} key={el}>
-                  {el}
-                </li>
-              )
-            })}
+            {genres &&
+              genres.map((el) => {
+                return (
+                  <li className={classes.genresItem} key={el}>
+                    {el}
+                  </li>
+                )
+              })}
           </ul>
           <div className={classes.description}>
-            {this.getCroppedView(overview)}
+            {overview && this.getCroppedView(overview)}
           </div>
           <Rate count={10} allowHalf></Rate>
         </div>

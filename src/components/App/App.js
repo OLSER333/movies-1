@@ -3,6 +3,7 @@ import { Tabs, Input, Pagination, Button, Spin } from 'antd'
 import '../../assets/styles/global.css'
 import '../../assets/styles/null.scss'
 import '../../assets/styles/vars.scss'
+// import _debounce from 'lodash/debounce'
 
 import Card from '../Card/Card'
 import TmdbApi from '../../services/TmdbApi'
@@ -13,6 +14,9 @@ export default class App extends Component {
   state = {
     movies: null,
     genres: null,
+    curPage: 1,
+    curSearch: '',
+    totalPages: 1,
   }
 
   // const getWordGenre = (genreIds) => {
@@ -20,15 +24,52 @@ export default class App extends Component {
   // }
 
   componentDidMount() {
+    this.getDataMovies('', 1)
+
     const tmdbApi = new TmdbApi()
-    tmdbApi.getAllMovies().then((data) => {
-      this.setState({ movies: data.results })
-      console.log('this state', this.state)
-    })
+
     tmdbApi.getGenres().then((data) => {
       this.setState({ genres: data })
       console.log('this state', this.state.genres)
     })
+  }
+
+  getDataMovies(searchedTitle, page = 1) {
+    const tmdbApi = new TmdbApi()
+
+    console.log('!!! search title now :', searchedTitle)
+
+    if (searchedTitle !== '') {
+      tmdbApi.searchMovie(searchedTitle, page).then((data) => {
+        this.setState({ movies: data.results, totalPages: data.total_pages })
+      })
+    } else {
+      tmdbApi.getTopMovies(page).then((data) => {
+        this.setState({ movies: data.results, totalPages: data.total_pages })
+        console.log('this TOP state', this.state)
+      })
+    }
+  }
+
+  usualFn() {
+    // const tmdbApi = new TmdbApi()
+    console.log('state for NOOOOW', this.state)
+    // tmdbApi.freeFetch()
+  }
+
+  // ==================================================================
+
+  searchNewMovie(title) {
+    this.setState({ curSearch: title })
+    this.setState({ curPage: 1 })
+    this.getDataMovies(title, 1)
+  }
+
+  goToPagPage(numPage) {
+    console.log('onChange here', numPage)
+    this.setState({ curPage: numPage })
+    this.getDataMovies(this.state.curSearch, numPage)
+    // this.getDataMovies(this.state.curSearch, numPage)
   }
 
   render() {
@@ -41,11 +82,15 @@ export default class App extends Component {
     return (
       <>
         <div className={classes.container}>
-          <Button onClick={() => console.log('state', this.state)}>
-            Ghkdf
-          </Button>
+          <Button onClick={() => this.usualFn()}>Ghkdf</Button>
           <Tabs items={items} />
-          <Input placeholder="Basic usage" />
+          <Input
+            onChange={(e) =>
+              // _debounce(() => this.searchNewMovie(e.target.value), 2000, [])
+              this.searchNewMovie(e.target.value)
+            }
+            placeholder="Basic usage"
+          />
           {!this.state.movies && <Spin></Spin>}
           <ul className={classes.moviesList}>
             {this.state.movies &&
@@ -72,7 +117,13 @@ export default class App extends Component {
                 )
               })}
           </ul>
-          <Pagination size="small" total={50} />
+          <Pagination
+            current={this.state.curPage}
+            onChange={(e) => this.goToPagPage(e)}
+            size="small"
+            total={this.state.totalPages}
+            showSizeChanger={false}
+          />
         </div>
       </>
     )
