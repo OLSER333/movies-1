@@ -9,12 +9,18 @@ import posterDefault from '../../assets/images/no-poster.png'
 import classes from './Card.module.scss'
 
 export default class Card extends Component {
+  state = {
+    rate: null,
+  }
+
   componentDidMount() {
     // const tmdbApi = new TmdbApi()
     // tmdbApi.getPoster().then((data) => {
     //   this.setState({ movies: data.results })
     //   console.log('this state', this.state)
     // })
+    this.setState({ rate: Number(localStorage.getItem(this.props.id)) })
+    console.log('component did mount')
   }
 
   getCroppedView(txt) {
@@ -29,10 +35,36 @@ export default class Card extends Component {
   //     return
   //   })
   // }
+  getColor(e = this.props.vote_average) {
+    if (e <= 3) return '#E90000'
+    else if (e <= 5) return '#E97E00'
+    else if (e <= 7) return '#E9D100'
+    else return '#66E900'
+  }
+
+  changeRate(id, rateNum) {
+    //отменяем рейтинг
+    if (rateNum === this.state.rate) {
+      localStorage.removeItem(`${id}`)
+      this.setState({ rate: 0 })
+    } else {
+      localStorage.setItem(id, `${rateNum}`)
+      this.setState({ rate: Number(localStorage.getItem(id)) })
+    }
+  }
 
   render() {
-    const { title, release_date, vote_average, overview, genres, imgPath } =
-      this.props
+    const {
+      title,
+      release_date,
+      vote_average,
+      overview,
+      genres,
+      imgPath,
+      id,
+      genre,
+    } = this.props
+
     return (
       <div className={classes.card}>
         <div className={classes.cardImg}>
@@ -47,10 +79,16 @@ export default class Card extends Component {
           />
           {/*<MyImg path={`https://image.tmdb.org/t/p/w500${imgPath}`}></MyImg>*/}
         </div>
+        <h1>{genre}</h1>
         <div className={classes.content}>
           <header className={classes.contentTop}>
             <h2 className={classes.header}>{title}</h2>
-            <p className={classes.rateValue}>{vote_average.toFixed(1)}</p>
+            <p
+              className={classes.rateValue}
+              style={{ borderColor: `${this.getColor()}` }}
+            >
+              {vote_average.toFixed(1)}
+            </p>
           </header>
           <div className={classes.date}>
             {release_date &&
@@ -69,7 +107,12 @@ export default class Card extends Component {
           <div className={classes.description}>
             {overview && this.getCroppedView(overview)}
           </div>
-          <Rate count={10} allowHalf></Rate>
+          <Rate
+            onChange={(rateNum) => this.changeRate(id, rateNum)}
+            value={this.state.rate}
+            count={10}
+            allowClear={false} // мешало right work
+          ></Rate>
         </div>
       </div>
     )

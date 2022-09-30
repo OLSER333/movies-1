@@ -7,6 +7,7 @@ import _debounce from 'lodash/debounce'
 
 import Card from '../Card/Card'
 import TmdbApi from '../../services/TmdbApi'
+import { RateContext } from '../../index'
 
 import classes from './App.module.scss'
 
@@ -82,6 +83,7 @@ export default class App extends Component {
       <>
         <div className={classes.container}>
           <Button onClick={() => this.usualFn()}>Ghkdf</Button>
+
           <Tabs items={items} />
           <Input
             onChange={
@@ -104,15 +106,20 @@ export default class App extends Component {
                   id,
                 } = el
                 return (
-                  <Card
-                    title={title}
-                    vote_average={vote_average}
-                    release_date={release_date}
-                    overview={overview}
-                    genres={genre_ids}
-                    imgPath={poster_path}
-                    key={id}
-                  ></Card>
+                  <RateContext.Consumer key={id}>
+                    {(value) => (
+                      <Card
+                        title={title}
+                        vote_average={vote_average}
+                        release_date={release_date}
+                        overview={overview}
+                        genres={genre_ids}
+                        imgPath={poster_path}
+                        id={id}
+                        genre={value}
+                      ></Card>
+                    )}
+                  </RateContext.Consumer>
                 )
               })}
           </ul>
