@@ -22,6 +22,7 @@ export default class TmdbApi {
       `/genre/movie/list?api_key=${process.env.REACT_APP_API_KEY}`
     )
   }
+
   async getTopMovies(page) {
     // eslint-disable-next-line no-undef
     const url = `/discover/movie?api_key=${process.env.REACT_APP_API_KEY}&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=${page}&with_watch_monetization_types=flatrate`
@@ -36,6 +37,17 @@ export default class TmdbApi {
   async searchMovie(title, page) {
     // eslint-disable-next-line no-undef
     const url = `/search/movie?api_key=59017ce86d5101576f32f47160168519&query=${title}&page=${page}`
+    // `/movie/556694?api_key=${process.env.REACT_APP_API_KEY}`
+    const res = await this.getResource(url)
+
+    console.log('res', res)
+    // console.log('res.json', res.json())
+    return res
+  }
+
+  async searchMovieById(id) {
+    // eslint-disable-next-line no-undef
+    const url = `/movie/${id}?api_key=${process.env.REACT_APP_API_KEY}`
     // `/movie/556694?api_key=${process.env.REACT_APP_API_KEY}`
     const res = await this.getResource(url)
 

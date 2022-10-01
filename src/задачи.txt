@@ -1,6 +1,46 @@
 Сделать moviesApp
 
+может быть полезно:
+    const filmTitle = item.title || 'Movie title not specified';
+    const overview = item.overview || 'Movie overview not specified';
 
+Вопрос о localStorage -
+Записывать данные в local. Есть 2 пути:
+    1) toADD: сразу setItem(id, rate)
+        а потом рендерить через {items} pushed через for(i = 0;;)
+    2) toADD:  getItem(arrRatedMovies), JSON.parse, push new, JSON.stringify.
+        но тогда getItem, parse, и делаем через родной map. Что быстрее?
+App
+    Tabs
+        <TabsItem>
+          //diff
+            {needSearch && Input ...}
+          //same
+            {!movies && Spin}
+            <ul.moviesList>
+                movies.map(el => {
+                    <Card>
+                      onKeyDown(onChange)={() => onAdd(orChange)ToLocalStorage(id, Rate)
+                    </Card>
+                }
+
+            </ul>
+        <TabsItem/>
+
+            {!movies && Spin}
+            <ul.moviesList>
+                ЦИКЛ FOR по LocStor.length
+                    <Card>
+                      onKeyDown(onChange)={() => onAdd(orChange)ToLocalStorage(id, Rate)
+                    </Card>
+                }
+                pagination - разная логика. Там запрос, а тут надо брать прямо из local по 20 штук
+            </ul>
+
+        <TabsItem>
+
+
+        <TabsItem/>
 
 
 

@@ -3,8 +3,10 @@ import { Rate } from 'antd'
 import { format } from 'date-fns'
 
 import '../../assets/styles/global.css'
+
 import posterDefault from '../../assets/images/no-poster.png'
 // import MyImg from '../MyImg/MyImg'
+import { RateContext } from '../../index'
 
 import classes from './Card.module.scss'
 
@@ -54,67 +56,65 @@ export default class Card extends Component {
   }
 
   render() {
-    const {
-      title,
-      release_date,
-      vote_average,
-      overview,
-      genres,
-      imgPath,
-      id,
-      genre,
-    } = this.props
+    // genres,
+    const { title, release_date, vote_average, overview, imgPath, id } =
+      this.props
 
     return (
-      <div className={classes.card}>
-        <div className={classes.cardImg}>
-          <img
-            // src={this.getPosterPath}
-            src={
-              imgPath
-                ? `https://image.tmdb.org/t/p/w500${imgPath}`
-                : posterDefault
-            }
-            alt={title}
-          />
-          {/*<MyImg path={`https://image.tmdb.org/t/p/w500${imgPath}`}></MyImg>*/}
-        </div>
-        <h1>{genre}</h1>
-        <div className={classes.content}>
-          <header className={classes.contentTop}>
-            <h2 className={classes.header}>{title}</h2>
-            <p
-              className={classes.rateValue}
-              style={{ borderColor: `${this.getColor()}` }}
-            >
-              {vote_average.toFixed(1)}
-            </p>
-          </header>
-          <div className={classes.date}>
-            {release_date &&
-              format(new Date(release_date.split('-')), 'MMMM q, yyyy')}
+      <RateContext.Consumer>
+        {(value) => (
+          <div className={classes.card}>
+            <div className={classes.cardImg}>
+              <img
+                // src={this.getPosterPath}
+                src={
+                  imgPath
+                    ? `https://image.tmdb.org/t/p/w500${imgPath}`
+                    : posterDefault
+                }
+                alt={title}
+              />
+              {/*<MyImg path={`https://image.tmdb.org/t/p/w500${imgPath}`}></MyImg>*/}
+            </div>
+            <h1>{value}</h1>
+            <div className={classes.content}>
+              <header className={classes.contentTop}>
+                <h2 className={classes.header}>{title}</h2>
+                <p
+                  className={classes.rateValue}
+                  style={{ borderColor: `${this.getColor()}` }}
+                >
+                  {/*{vote_average.toFixed(1)}*/}
+                  {vote_average}
+                </p>
+              </header>
+              <div className={classes.date}>
+                {release_date &&
+                  format(new Date(release_date.split('-')), 'MMMM q, yyyy')}
+              </div>
+              {/*<ul className={classes.genresList}>*/}
+              {/*  {genres &&*/}
+              {/*    genres.map((el) => {*/}
+              {/*      return (*/}
+              {/*        <li className={classes.genresItem} key={el}>*/}
+              {/*          {el}*/}
+              {/*        </li>*/}
+              {/*      )*/}
+              {/*    })}*/}
+              {/*</ul>*/}
+              <div className={classes.description}>
+                {overview && this.getCroppedView(overview)}
+              </div>
+              <Rate
+                onChange={(rateNum) => this.changeRate(id, rateNum)}
+                value={this.state.rate}
+                count={10}
+                allowClear={false} // мешало right work
+              ></Rate>
+            </div>
           </div>
-          <ul className={classes.genresList}>
-            {genres &&
-              genres.map((el) => {
-                return (
-                  <li className={classes.genresItem} key={el}>
-                    {el}
-                  </li>
-                )
-              })}
-          </ul>
-          <div className={classes.description}>
-            {overview && this.getCroppedView(overview)}
-          </div>
-          <Rate
-            onChange={(rateNum) => this.changeRate(id, rateNum)}
-            value={this.state.rate}
-            count={10}
-            allowClear={false} // мешало right work
-          ></Rate>
-        </div>
-      </div>
+        )}
+      </RateContext.Consumer>
     )
   }
 }
