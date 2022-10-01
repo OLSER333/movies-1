@@ -87,15 +87,12 @@ export default class TabRatedContent extends React.Component {
     // tmdbApi.freeFetch()
   }
 
-  // getIdsGenres(genres) {
-  //   console.log('genres', genres)
-  //   const genresId = genres.reduce((newArr, cur) => {
-  //     newArr.push(cur.id)
-  //     return newArr
-  //   }, [])
-  //   console.log('genresID', genresId)
-  //   return genresId
-  // }
+  getIdsGenres(genres) {
+    return genres.reduce((newArr, cur) => {
+      newArr.push(cur.id)
+      return newArr
+    }, [])
+  }
   /*
 0:{id: 14, name: 'Fantasy'}
 1:{id: 12, name: 'Adventure'}
@@ -117,7 +114,7 @@ export default class TabRatedContent extends React.Component {
                 vote_average,
                 release_date,
                 overview,
-                // genres,
+                genres,
                 poster_path,
                 id,
               } = el
@@ -127,7 +124,7 @@ export default class TabRatedContent extends React.Component {
                   vote_average={vote_average}
                   release_date={release_date}
                   overview={overview}
-                  // genres={() => this.getIdsGenres(genres)}
+                  genres={this.getIdsGenres(genres)}
                   imgPath={poster_path}
                   id={id}
                   key={id}
@@ -141,8 +138,9 @@ export default class TabRatedContent extends React.Component {
             current={this.state.curPage}
             onChange={(e) => this.goToPagPage(e)}
             size="small"
-            total={this.state.totalPages}
+            total={this.state.totalPages * 20}
             showSizeChanger={false}
+            defaultPageSize={20}
           />
         )}
       </div>

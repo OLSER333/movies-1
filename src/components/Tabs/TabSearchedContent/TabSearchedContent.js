@@ -2,7 +2,7 @@ import React from 'react'
 // import { Empty, Input, Pagination, Spin } from 'antd'
 // import Card from '../Card/Card'
 //==================================================================
-import { Input, Pagination, Spin, Empty } from 'antd'
+import { Input, Pagination, Spin, Empty, Button } from 'antd'
 import '../../../assets/styles/global.css'
 import '../../../assets/styles/null.scss'
 import '../../../assets/styles/vars.scss'
@@ -69,9 +69,17 @@ export default class TabSearchedContent extends React.Component {
     // this.getDataMovies(this.state.curSearch, numPage)
   }
 
+  usualFn() {
+    // const tmdbApi = new TmdbApi()
+    console.log('state for NOOOOW', this.state)
+    // tmdbApi.freeFetch()
+  }
+
   render() {
     return (
       <div className={classes.tabContainer}>
+        <Button onClick={() => this.usualFn()}>Ghkdf</Button>
+
         <Input
           onChange={
             (e) => this.searchNewMovie(e.target.value)
@@ -113,8 +121,9 @@ export default class TabSearchedContent extends React.Component {
             current={this.state.curPage}
             onChange={(e) => this.goToPagPage(e)}
             size="small"
-            total={this.state.totalPages}
+            total={this.state.totalPages * 20}
             showSizeChanger={false}
+            defaultPageSize={20}
           />
         )}
       </div>

@@ -1,5 +1,8 @@
 Сделать moviesApp
 
+написать обработку 500+ страницы error..
+разобраться с контекстом и избавиться от кучи аргументов?)
+
 может быть полезно:
     const filmTitle = item.title || 'Movie title not specified';
     const overview = item.overview || 'Movie overview not specified';

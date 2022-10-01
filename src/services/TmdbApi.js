@@ -13,7 +13,7 @@ export default class TmdbApi {
       // eslint-disable-next-line no-undef
       `/trending/movie/week?api_key=${process.env.REACT_APP_API_KEY}`
     )
-    console.log(movies)
+    console.log('getAllMovies', movies)
     return movies
   }
   async getGenres() {
@@ -29,7 +29,7 @@ export default class TmdbApi {
     // `/movie/556694?api_key=${process.env.REACT_APP_API_KEY}`
     const res = await this.getResource(url)
 
-    console.log('movies', res)
+    console.log('Top movies', res)
     // console.log('res.json', res.json())
     return res
   }

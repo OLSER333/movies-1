@@ -56,8 +56,8 @@ export default class Card extends Component {
   }
 
   render() {
-    // genres,
-    const { title, release_date, vote_average, overview, imgPath, id } =
+    //
+    const { title, release_date, vote_average, overview, imgPath, id, genres } =
       this.props
 
     return (
@@ -84,24 +84,24 @@ export default class Card extends Component {
                   className={classes.rateValue}
                   style={{ borderColor: `${this.getColor()}` }}
                 >
-                  {/*{vote_average.toFixed(1)}*/}
-                  {vote_average}
+                  {vote_average.toFixed(1)}
+                  {/*{vote_average}*/}
                 </p>
               </header>
               <div className={classes.date}>
                 {release_date &&
                   format(new Date(release_date.split('-')), 'MMMM q, yyyy')}
               </div>
-              {/*<ul className={classes.genresList}>*/}
-              {/*  {genres &&*/}
-              {/*    genres.map((el) => {*/}
-              {/*      return (*/}
-              {/*        <li className={classes.genresItem} key={el}>*/}
-              {/*          {el}*/}
-              {/*        </li>*/}
-              {/*      )*/}
-              {/*    })}*/}
-              {/*</ul>*/}
+              <ul className={classes.genresList}>
+                {genres &&
+                  genres.map((el) => {
+                    return (
+                      <li className={classes.genresItem} key={el}>
+                        {el}
+                      </li>
+                    )
+                  })}
+              </ul>
               <div className={classes.description}>
                 {overview && this.getCroppedView(overview)}
               </div>
