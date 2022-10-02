@@ -29,7 +29,7 @@ export default class TmdbApi {
     // `/movie/556694?api_key=${process.env.REACT_APP_API_KEY}`
     const res = await this.getResource(url)
 
-    console.log('Top movies', res)
+    // console.log('Top movies', res)
     // console.log('res.json', res.json())
     return res
   }
@@ -40,7 +40,7 @@ export default class TmdbApi {
     // `/movie/556694?api_key=${process.env.REACT_APP_API_KEY}`
     const res = await this.getResource(url)
 
-    console.log('res', res)
+    // console.log('res', res)
     // console.log('res.json', res.json())
     return res
   }
@@ -51,7 +51,7 @@ export default class TmdbApi {
     // `/movie/556694?api_key=${process.env.REACT_APP_API_KEY}`
     const res = await this.getResource(url)
 
-    console.log('res', res)
+    // console.log('res', res)
     // console.log('res.json', res.json())
     return res
   }

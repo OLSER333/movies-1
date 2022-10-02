@@ -1,6 +1,4 @@
 import React from 'react'
-// import { Empty, Input, Pagination, Spin } from 'antd'
-// import Card from '../Card/Card'
 //==================================================================
 import { Input, Pagination, Spin, Empty, Button } from 'antd'
 import '../../../assets/styles/global.css'
@@ -20,6 +18,7 @@ export default class TabSearchedContent extends React.Component {
     curPage: 1,
     curSearch: '',
     totalPages: 0,
+    tabNum: null,
   }
 
   // const getWordGenre = (genreIds) => {
@@ -27,14 +26,33 @@ export default class TabSearchedContent extends React.Component {
   // }
 
   componentDidMount() {
+    this.setState({ tabNum: this.props.tabNum })
+    this.updateTab()
     // this.setState({ tabNum: this.props.tabNum })
-    this.getDataMovies('', 1)
+  }
 
+  componentDidUpdate(prevProps) {
+    if (this.props.needUpdate !== prevProps.needUpdate) {
+      console.log('try update')
+      this.updateTab()
+    }
+  }
+
+  updateTab() {
+    if (this.props.tabNum === 1) {
+      console.log('in Search now')
+      this.getDataMovies('', 1)
+    } else if (this.props.tabNum === 2) {
+      console.log('in Rated now')
+      this.getRatedMovies(1)
+    }
+
+    this.props.hasUpdated(this.props.tabNum)
     const tmdbApi = new TmdbApi()
 
     tmdbApi.getGenres().then((data) => {
       this.setState({ genres: data })
-      console.log('this state', this.state.genres)
+      // console.log('this state', this.state.genres)
     })
   }
 
@@ -45,14 +63,49 @@ export default class TabSearchedContent extends React.Component {
 
     if (searchedTitle !== '') {
       tmdbApi.searchMovie(searchedTitle, page).then((data) => {
+        data.results = data.results.map((el) => {
+          el.userRate = localStorage.getItem(el.id)
+          return el
+        })
+        console.log('data.results', data.results)
         this.setState({ movies: data.results, totalPages: data.total_pages })
       })
     } else {
       tmdbApi.getTopMovies(page).then((data) => {
+        data.results = data.results.map((el) => {
+          el.userRate = localStorage.getItem(el.id)
+          return el
+        })
+        console.log('data.results Top', data.results)
         this.setState({ movies: data.results, totalPages: data.total_pages })
-        console.log('this TOP state', this.state)
+        // console.log('this TOP state', this.state)
       })
     }
+  }
+
+  async getRatedMovies(page = 1) {
+    const tmdbApi = new TmdbApi()
+    const ratedMovies = []
+    const countMoviesOnPage =
+      localStorage.length < page * 20 ? localStorage.length : page * 20
+
+    for (let i = (page - 1) * 20; i < countMoviesOnPage; i++) {
+      // массив
+      ratedMovies.push(tmdbApi.searchMovieById(localStorage.key(i)))
+    }
+    // eslint-disable-next-line no-undef
+    await Promise.all(ratedMovies).then((data) => {
+      console.log('Promiseall', data)
+      data = data.map((el) => {
+        el.userRate = localStorage.getItem(el.id)
+        return el
+      })
+      this.setState({
+        movies: data,
+        totalPages: Math.ceil(localStorage.length / 20),
+      })
+    })
+    // try to update rate
   }
 
   // ==================================================================
@@ -63,9 +116,13 @@ export default class TabSearchedContent extends React.Component {
   }, 1000)
 
   goToPagPage(numPage) {
-    console.log('onChange here', numPage)
     this.setState({ curPage: numPage })
-    this.getDataMovies(this.state.curSearch, numPage)
+
+    if (this.state.tabNum === 1) {
+      this.getDataMovies(this.state.curSearch, numPage)
+    } else {
+      this.getRatedMovies(numPage)
+    }
     // this.getDataMovies(this.state.curSearch, numPage)
   }
 
@@ -73,6 +130,14 @@ export default class TabSearchedContent extends React.Component {
     // const tmdbApi = new TmdbApi()
     console.log('state for NOOOOW', this.state)
     // tmdbApi.freeFetch()
+  }
+
+  //for Rated - it's has another (id + word) I take only ids
+  getIdsGenres(genres) {
+    return genres.reduce((newArr, cur) => {
+      newArr.push(cur.id)
+      return newArr
+    }, [])
   }
 
   render() {
@@ -98,8 +163,10 @@ export default class TabSearchedContent extends React.Component {
                 release_date,
                 overview,
                 genre_ids,
+                genres,
                 poster_path,
                 id,
+                userRate,
               } = el
               return (
                 <Card
@@ -107,10 +174,11 @@ export default class TabSearchedContent extends React.Component {
                   vote_average={vote_average}
                   release_date={release_date}
                   overview={overview}
-                  genres={genre_ids}
+                  genres={genre_ids ? genre_ids : this.getIdsGenres(genres)}
                   imgPath={poster_path}
                   id={id}
                   key={id}
+                  userRate={userRate}
                 ></Card>
               )
             })}

@@ -25,6 +25,12 @@ export default class Card extends Component {
     console.log('component did mount')
   }
 
+  componentDidUpdate(prevProps) {
+    if (prevProps.userRate !== this.props.userRate) {
+      this.setState({ rate: this.props.userRate })
+    }
+  }
+
   getCroppedView(txt) {
     const limit = 120
     const re = new RegExp('(^.{' + (limit - 1) + '}([^ ]+|\\s))(.*)')
@@ -72,11 +78,11 @@ export default class Card extends Component {
                     ? `https://image.tmdb.org/t/p/w500${imgPath}`
                     : posterDefault
                 }
-                alt={title}
+                alt={title + value}
               />
               {/*<MyImg path={`https://image.tmdb.org/t/p/w500${imgPath}`}></MyImg>*/}
             </div>
-            <h1>{value}</h1>
+            {/*<h1>{value}</h1>*/}
             <div className={classes.content}>
               <header className={classes.contentTop}>
                 <h2 className={classes.header}>{title}</h2>
