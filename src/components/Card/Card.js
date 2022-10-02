@@ -22,11 +22,13 @@ export default class Card extends Component {
     //   console.log('this state', this.state)
     // })
     this.setState({ rate: Number(localStorage.getItem(this.props.id)) })
-    console.log('component did mount')
+    console.log('Card did mount')
   }
 
   componentDidUpdate(prevProps) {
+    console.log('Card did update')
     if (prevProps.userRate !== this.props.userRate) {
+      console.log('Card did update +')
       this.setState({ rate: this.props.userRate })
     }
   }
@@ -78,6 +80,10 @@ export default class Card extends Component {
                     ? `https://image.tmdb.org/t/p/w500${imgPath}`
                     : posterDefault
                 }
+                onError={({ currentTarget }) => {
+                  currentTarget.onerror = null // prevents looping
+                  currentTarget.src = posterDefault
+                }}
                 alt={title + value}
               />
               {/*<MyImg path={`https://image.tmdb.org/t/p/w500${imgPath}`}></MyImg>*/}

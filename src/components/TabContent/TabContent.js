@@ -1,17 +1,17 @@
 import React from 'react'
 //==================================================================
 import { Input, Pagination, Spin, Empty, Button } from 'antd'
-import '../../../assets/styles/global.css'
-import '../../../assets/styles/null.scss'
-import '../../../assets/styles/vars.scss'
+import '../../assets/styles/global.css'
+import '../../assets/styles/null.scss'
+import '../../assets/styles/vars.scss'
 import _debounce from 'lodash/debounce'
 
-import Card from '../../Card/Card'
-import TmdbApi from '../../../services/TmdbApi'
+import Card from '../Card/Card'
+import TmdbApi from '../../services/TmdbApi'
 
-import classes from './TabSearchedContent.module.scss'
+import classes from './TabContent.module.scss'
 
-export default class TabSearchedContent extends React.Component {
+export default class TabContent extends React.Component {
   state = {
     movies: null,
     genres: null,
@@ -26,15 +26,19 @@ export default class TabSearchedContent extends React.Component {
   // }
 
   componentDidMount() {
+    console.log('inComponent DIDMOUNT')
     this.setState({ tabNum: this.props.tabNum })
     this.updateTab()
-    // this.setState({ tabNum: this.props.tabNum })
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps, prevState) {
+    console.log('inComponent DID Update')
     if (this.props.needUpdate !== prevProps.needUpdate) {
       console.log('try update')
       this.updateTab()
+    }
+    if (prevState !== this.state) {
+      console.log('TabSearch did update (state)')
     }
   }
 
@@ -145,13 +149,15 @@ export default class TabSearchedContent extends React.Component {
       <div className={classes.tabContainer}>
         <Button onClick={() => this.usualFn()}>Ghkdf</Button>
 
-        <Input
-          onChange={
-            (e) => this.searchNewMovie(e.target.value)
-            // this.searchNewMovie(e.target.value)
-          }
-          placeholder="Type to search"
-        />
+        {this.props.tabNum === 1 && (
+          <Input
+            onChange={
+              (e) => this.searchNewMovie(e.target.value)
+              // this.searchNewMovie(e.target.value)
+            }
+            placeholder="Type to search"
+          />
+        )}
 
         {!this.state.movies && <Spin size="large"></Spin>}
         <ul className={classes.moviesList}>

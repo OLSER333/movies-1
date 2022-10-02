@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Button, Tabs } from 'antd'
 
-import TabSearchedContent from '../Tabs/TabSearchedContent/TabSearchedContent'
+import TabContent from '../TabContent/TabContent'
 
 import classes from './App.module.scss'
 
@@ -67,7 +67,7 @@ export default class App extends Component {
         label: 'Search',
         key: '1',
         children: (
-          <TabSearchedContent
+          <TabContent
             tabNum={1}
             needUpdate={this.state.needUpdateSearched}
             hasUpdated={(tabNum) => this.hasUpdated(tabNum)}
@@ -78,7 +78,7 @@ export default class App extends Component {
         label: 'Rated',
         key: '2',
         children: (
-          <TabSearchedContent
+          <TabContent
             tabNum={2}
             needUpdate={this.state.needUpdateRated}
             hasUpdated={(tabNum) => this.hasUpdated(tabNum)}
