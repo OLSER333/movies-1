@@ -45,19 +45,19 @@ export default class TabContent extends React.Component {
   updateTab() {
     if (this.props.tabNum === 1) {
       console.log('in Search now')
-      this.getDataMovies('', 1)
+      this.getDataMovies(this.state.curSearch, 1)
     } else if (this.props.tabNum === 2) {
       console.log('in Rated now')
       this.getRatedMovies(1)
     }
 
     this.props.hasUpdated(this.props.tabNum)
-    const tmdbApi = new TmdbApi()
+    // const tmdbApi = new TmdbApi()
 
-    tmdbApi.getGenres().then((data) => {
-      this.setState({ genres: data })
-      // console.log('this state', this.state.genres)
-    })
+    // tmdbApi.getGenres().then((data) => {
+    //   this.setState({ genres: data })
+    //   // console.log('this state', this.state.genres)
+    // })
   }
 
   getDataMovies(searchedTitle, page = 1) {

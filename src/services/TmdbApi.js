@@ -17,10 +17,14 @@ export default class TmdbApi {
     return movies
   }
   async getGenres() {
-    return await this.getResource(
+    const res = await this.getResource(
       // eslint-disable-next-line no-undef
       `/genre/movie/list?api_key=${process.env.REACT_APP_API_KEY}`
     )
+    return res.genres.reduce((newObj, cur) => {
+      newObj[cur.id] = cur.name
+      return newObj
+    }, {})
   }
 
   async getTopMovies(page) {

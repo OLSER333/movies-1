@@ -6,13 +6,14 @@ import '../../assets/styles/global.css'
 
 import posterDefault from '../../assets/images/no-poster.png'
 // import MyImg from '../MyImg/MyImg'
-import { RateContext } from '../../index'
+import { GenresContext } from '../GenresContext/GenresContext'
 
 import classes from './Card.module.scss'
 
 export default class Card extends Component {
   state = {
     rate: null,
+    visible: false,
   }
 
   componentDidMount() {
@@ -63,17 +64,22 @@ export default class Card extends Component {
     }
   }
 
+  getGenreWord(arr, id) {
+    return arr[id]
+  }
+
   render() {
     //
     const { title, release_date, vote_average, overview, imgPath, id, genres } =
       this.props
-
     return (
-      <RateContext.Consumer>
-        {(value) => (
+      <GenresContext.Consumer>
+        {/* eslint-disable-next-line no-unused-vars */}
+        {(val) => (
           <div className={classes.card}>
             <div className={classes.cardImg}>
               <img
+                onClick={() => this.setState({ visible: true })}
                 // src={this.getPosterPath}
                 src={
                   imgPath
@@ -84,7 +90,7 @@ export default class Card extends Component {
                   currentTarget.onerror = null // prevents looping
                   currentTarget.src = posterDefault
                 }}
-                alt={title + value}
+                alt={title}
               />
               {/*<MyImg path={`https://image.tmdb.org/t/p/w500${imgPath}`}></MyImg>*/}
             </div>
@@ -109,7 +115,8 @@ export default class Card extends Component {
                   genres.map((el) => {
                     return (
                       <li className={classes.genresItem} key={el}>
-                        {el}
+                        {/*{this.getGenreWord(val, el)}*/}
+                        {val[el]}
                       </li>
                     )
                   })}
@@ -117,6 +124,8 @@ export default class Card extends Component {
               <div className={classes.description}>
                 {overview && this.getCroppedView(overview)}
               </div>
+
+              {this.state.visible && <div> {val[0]} </div>}
               <Rate
                 onChange={(rateNum) => this.changeRate(id, rateNum)}
                 value={this.state.rate}
@@ -126,7 +135,7 @@ export default class Card extends Component {
             </div>
           </div>
         )}
-      </RateContext.Consumer>
+      </GenresContext.Consumer>
     )
   }
 }

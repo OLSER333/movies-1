@@ -1,19 +1,25 @@
 import React, { Component } from 'react'
-import { Button, Tabs } from 'antd'
+import { Button, Spin, Tabs } from 'antd'
 
 import TabContent from '../TabContent/TabContent'
+import TmdbApi from '../../services/TmdbApi'
+import { GenresContext } from '../GenresContext/GenresContext'
 
 import classes from './App.module.scss'
-
 export default class App extends Component {
   state = {
     ratedIds: null,
     needUpdateRated: false,
     needUpdateSearched: false,
+    genresList: null,
   }
 
+  tmdbApi = new TmdbApi()
   componentDidMount() {
     this.setState({ ratedIds: Object.entries(localStorage) })
+    this.tmdbApi.getGenres().then((data) => {
+      this.setState({ genresList: data })
+    })
   }
 
   changeTab(activeTab) {
@@ -89,15 +95,23 @@ export default class App extends Component {
 
     return (
       <>
-        <div className={classes.container}>
-          <Button onClick={() => console.log('state APP', this.state)}>
-            Слово
-          </Button>
-          <Tabs
-            onChange={(activeTab) => this.changeTab(activeTab)}
-            items={items}
-          />
-        </div>
+        <GenresContext.Provider value={this.state.genresList}>
+          <div className={classes.container}>
+            {!this.state.genresList ? (
+              <Spin size="Large"></Spin>
+            ) : (
+              <>
+                <Button onClick={() => console.log('state APP', this.state)}>
+                  beeee
+                </Button>
+                <Tabs
+                  onChange={(activeTab) => this.changeTab(activeTab)}
+                  items={items}
+                />
+              </>
+            )}
+          </div>
+        </GenresContext.Provider>
       </>
     )
   }
