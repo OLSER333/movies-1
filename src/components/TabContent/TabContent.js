@@ -54,7 +54,7 @@ export default class TabContent extends React.Component {
       // console.log('in Rated now')
       this.getRatedMovies(this.state.curPage) // was 1
     }
-    this.props.hasUpdated(this.props.tabNum)
+    // this.props.hasUpdated(this.props.tabNum)
     // const tmdbApi = new TmdbApi()
 
     // tmdbApi.getGenres().then((data) => {

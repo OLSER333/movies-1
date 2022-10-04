@@ -32,9 +32,22 @@ export default class App extends Component {
     // let needUpdate = false
     let newEntries = Object.entries(localStorage)
     if (newEntries.length !== this.state.ratedIds.length) {
-      // if (Number(activeTab) === 1)
-      this.setState({ needUpdateSearched: true, needUpdateRated: true })
-      // if (Number(activeTab) === 2) this.setState({  })
+      if (Number(activeTab) === 1) {
+        this.setState((prevState) => {
+          return {
+            needUpdateSearched: !prevState.needUpdateSearched,
+            // needUpdateRated: !prevState.needUpdateRated,
+          }
+        })
+      }
+      if (Number(activeTab) === 2) {
+        this.setState((prevState) => {
+          return {
+            // needUpdateSearched: !prevState.needUpdateSearched,
+            needUpdateRated: !prevState.needUpdateRated,
+          }
+        })
+      }
       // return true
     } else {
       for (let i = 0; i < newEntries.length; i++) {
@@ -42,12 +55,24 @@ export default class App extends Component {
           newEntries[i][0] !== this.state.ratedIds[i][0] ||
           newEntries[i][1] !== this.state.ratedIds[i][1]
         ) {
-          // if (Number(activeTab) === 1)
-          this.setState({ needUpdateSearched: true, needUpdateRated: true })
-          // if (Number(activeTab) === 2) {
-          // this.setState({  })
-          // }o
-          break
+          if (Number(activeTab) === 1) {
+            this.setState((prevState) => {
+              return {
+                needUpdateSearched: !prevState.needUpdateSearched,
+                // needUpdateRated: !prevState.needUpdateRated,
+              }
+            })
+          }
+
+          if (Number(activeTab) === 2) {
+            this.setState((prevState) => {
+              return {
+                // needUpdateSearched: !prevState.needUpdateSearched,
+                needUpdateRated: !prevState.needUpdateRated,
+              }
+            })
+          }
+          // break
         }
       }
     }
@@ -58,15 +83,15 @@ export default class App extends Component {
     // return needUpdate
   }
 
-  hasUpdated(tabNum) {
-    if (tabNum === 1 && this.state.needUpdateSearched) {
-      this.setState({ needUpdateSearched: false })
-    }
-    if (tabNum === 2 && this.state.needUpdateRated) {
-      this.setState({ needUpdateRated: false })
-    }
-    // this.setState({ ratedIds: Object.entries(localStorage) })
-  }
+  // hasUpdated(tabNum) {
+  //   if (tabNum === 1 && this.state.needUpdateSearched) {
+  //     // this.setState({ needUpdateSearched: false })
+  //   }
+  //   if (tabNum === 2 && this.state.needUpdateRated) {
+  //     // this.setState({ needUpdateRated: false })
+  //   }
+  //   // this.setState({ ratedIds: Object.entries(localStorage) })
+  // }
 
   render() {
     const items = [
@@ -77,7 +102,7 @@ export default class App extends Component {
           <TabContent
             tabNum={1}
             needUpdate={this.state.needUpdateSearched}
-            hasUpdated={(tabNum) => this.hasUpdated(tabNum)}
+            // hasUpdated={(tabNum) => this.hasUpdated(tabNum)}
           />
         ),
       }, // remember to pass the key prop
@@ -88,7 +113,7 @@ export default class App extends Component {
           <TabContent
             tabNum={2}
             needUpdate={this.state.needUpdateRated}
-            hasUpdated={(tabNum) => this.hasUpdated(tabNum)}
+            // hasUpdated={(tabNum) => this.hasUpdated(tabNum)}
           />
         ),
       },
