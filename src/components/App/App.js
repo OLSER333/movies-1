@@ -32,8 +32,9 @@ export default class App extends Component {
     // let needUpdate = false
     let newEntries = Object.entries(localStorage)
     if (newEntries.length !== this.state.ratedIds.length) {
-      if (Number(activeTab) === 1) this.setState({ needUpdateSearched: true })
-      if (Number(activeTab) === 2) this.setState({ needUpdateRated: true })
+      // if (Number(activeTab) === 1)
+      this.setState({ needUpdateSearched: true, needUpdateRated: true })
+      // if (Number(activeTab) === 2) this.setState({  })
       // return true
     } else {
       for (let i = 0; i < newEntries.length; i++) {
@@ -41,11 +42,11 @@ export default class App extends Component {
           newEntries[i][0] !== this.state.ratedIds[i][0] ||
           newEntries[i][1] !== this.state.ratedIds[i][1]
         ) {
-          if (Number(activeTab) === 1)
-            this.setState({ needUpdateSearched: true })
-          if (Number(activeTab) === 2) {
-            this.setState({ needUpdateRated: true })
-          }
+          // if (Number(activeTab) === 1)
+          this.setState({ needUpdateSearched: true, needUpdateRated: true })
+          // if (Number(activeTab) === 2) {
+          // this.setState({  })
+          // }o
           break
         }
       }
@@ -92,13 +93,19 @@ export default class App extends Component {
         ),
       },
     ]
+    const spinStyle = {
+      height: '100vh',
+      display: 'grid',
+      justifyContent: 'center',
+      alignItems: 'center',
+    }
 
     return (
       <>
         <GenresContext.Provider value={this.state.genresList}>
           <div className={classes.container}>
             {!this.state.genresList ? (
-              <Spin size="Large"></Spin>
+              <Spin size="large" style={spinStyle}></Spin>
             ) : (
               <>
                 <Button onClick={() => console.log('state APP', this.state)}>

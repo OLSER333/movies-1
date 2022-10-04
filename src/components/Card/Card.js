@@ -13,7 +13,6 @@ import classes from './Card.module.scss'
 export default class Card extends Component {
   state = {
     rate: null,
-    visible: false,
   }
 
   componentDidMount() {
@@ -23,14 +22,14 @@ export default class Card extends Component {
     //   console.log('this state', this.state)
     // })
     this.setState({ rate: Number(localStorage.getItem(this.props.id)) })
-    console.log('Card did mount')
+    console.log('Card DID mount')
   }
 
   componentDidUpdate(prevProps) {
-    console.log('Card did update')
+    console.log('Card ENTER did update')
     if (prevProps.userRate !== this.props.userRate) {
-      console.log('Card did update +')
-      this.setState({ rate: this.props.userRate })
+      console.log('Card TRY did update')
+      this.setState({ rate: Number(this.props.userRate) })
     }
   }
 
@@ -79,7 +78,7 @@ export default class Card extends Component {
           <div className={classes.card}>
             <div className={classes.cardImg}>
               <img
-                onClick={() => this.setState({ visible: true })}
+                onClick={() => console.log('Card state now', this.state)}
                 // src={this.getPosterPath}
                 src={
                   imgPath
