@@ -1,4 +1,5 @@
-$mobile: 1000px;
+$tablet: 1000px;
+$mobile: 500px;
 
 .card {
   display: flex;
@@ -7,8 +8,11 @@ $mobile: 1000px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   max-width: 450px;
   //max-height: 285px;
-  @media (max-width:$mobile) {
+  @media (max-width:$tablet) {
     max-width: none;
+  }
+  @media (max-width:$mobile) {
+    position: relative;
   }
 }
 
@@ -23,9 +27,15 @@ $mobile: 1000px;
     vertical-align: top;
   }
   
-  @media (max-width:$mobile) {
+  @media (max-width:$tablet) {
     flex: 0 1 auto;
     width: 240px;
+  }
+  @media (max-width:$mobile) {
+    left: 10px;
+    top: 10px;
+    width: 71px;
+    position: absolute;
   }
 }
 
@@ -36,7 +46,7 @@ $mobile: 1000px;
   padding: 20px;
   height: 100%;
   
-  @media (max-width:$mobile) {
+  @media (max-width:$tablet) {
     width: 100%;
   }
 }
@@ -47,6 +57,11 @@ $mobile: 1000px;
   align-items: center;
   justify-content: space-between;
   gap: 10px;
+  
+  @media (max-width:$mobile) {
+    margin-left: 90px;
+    min-height: 28px;
+  }
 }
 
 .header {
@@ -76,12 +91,22 @@ $mobile: 1000px;
   font-size: 12px;
   line-height: 22px;
   color: #827E7E;
+  @media (max-width:$mobile) {
+    margin-left: 90px;
+    min-height: 22px;
+  }
 }
 
 .genresList {
   display: flex;
   gap: 5px;
   flex-wrap: wrap;
+
+  @media (max-width:$mobile) {
+    margin-left: 90px;
+    min-height: 27px;
+
+  }
 }
 
 .genresItem {
