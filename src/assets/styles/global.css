@@ -1,28 +1,16 @@
 
-
-
 body {
-    font-family: Inter, sans-serif ;
+    font-family: Inter, sans-serif;
 }
+
 ul {
     list-style: none;
     padding-left: 0;
 }
 
-
-
-
-
-
-
-/*//==================================================================*/
-/*//==================================================================*/
-
 .ant-tabs-nav-wrap {
     justify-content: center;
 }
-
-/*//==================================================================*/
 
 .ant-rate {
     margin-top: auto;

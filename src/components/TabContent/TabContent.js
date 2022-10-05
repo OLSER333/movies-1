@@ -1,13 +1,13 @@
 import React from 'react'
 //==================================================================
-import { Input, Pagination, Spin, Empty, Button, Alert } from 'antd'
+import { Input, Pagination, Spin, Empty, Alert } from 'antd'
 import '../../assets/styles/global.css'
 import '../../assets/styles/null.scss'
-import '../../assets/styles/vars.scss'
 import _debounce from 'lodash/debounce'
 
 import Card from '../Card/Card'
 import TmdbApi from '../../services/TmdbApi'
+import { getIdsGenres } from '../../utils/utils'
 
 import classes from './TabContent.module.scss'
 
@@ -23,24 +23,14 @@ export default class TabContent extends React.Component {
     hasError: false,
   }
 
-  // const getWordGenre = (genreIds) => {
-  //   return genreIds.map(el => this.state.genres)
-  // }
-
   componentDidMount() {
-    console.log('TabContent DID mount')
     this.setState({ tabNum: this.props.tabNum })
     this.updateTab()
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    console.log('TabContent ENTER did update')
-    // console.log('CHECKER , ', this.props.needUpdate, prevProps.needUpdate)
+  componentDidUpdate(prevProps) {
     if (this.props.needUpdate !== prevProps.needUpdate) {
-      console.log('TabContent TRY update ')
       this.updateTab()
-    } else if (prevState.hasError !== this.state.hasError) {
-      // console.log('want to rerender, but how', this.state..hasError)
     }
   }
 
@@ -48,19 +38,10 @@ export default class TabContent extends React.Component {
     this.setState({ isLoading: true, movies: null })
 
     if (this.props.tabNum === 1) {
-      // console.log('in Search now')
       this.getDataMovies(this.state.curSearch, this.state.curPage) // was 1
     } else if (this.props.tabNum === 2) {
-      // console.log('in Rated now')
       this.getRatedMovies(this.state.curPage) // was 1
     }
-    // this.props.hasUpdated(this.props.tabNum)
-    // const tmdbApi = new TmdbApi()
-
-    // tmdbApi.getGenres().then((data) => {
-    //   this.setState({ genres: data })
-    //   // console.log('this state', this.state.genres)
-    // })
   }
 
   getDataMovies(searchedTitle, page = 1) {
@@ -80,9 +61,7 @@ export default class TabContent extends React.Component {
   }
 
   onError() {
-    // console.log('верхний ур ошибка', err)
     this.setState({ isLoading: false })
-
     this.setState({
       hasError: true,
     })
@@ -93,7 +72,6 @@ export default class TabContent extends React.Component {
       el.userRate = localStorage.getItem(el.id)
       return el
     })
-    // console.log('data.results', data.results)
     this.setState({ movies: data.results, totalPages: data.total_pages })
     this.setState({
       hasError: false,
@@ -109,13 +87,11 @@ export default class TabContent extends React.Component {
       localStorage.length < page * 20 ? localStorage.length : page * 20
 
     for (let i = (page - 1) * 20; i < countMoviesOnPage; i++) {
-      // массив
       ratedMovies.push(tmdbApi.searchMovieById(localStorage.key(i)))
     }
     // eslint-disable-next-line no-undef
     await Promise.all(ratedMovies)
       .then((data) => {
-        console.log('Promiseall', data)
         data = data.map((el) => {
           el.userRate = localStorage.getItem(el.id)
           return el
@@ -127,7 +103,6 @@ export default class TabContent extends React.Component {
         })
       })
       .catch(() => this.onError())
-    // try to update rate
   }
 
   // ==================================================================
@@ -145,21 +120,6 @@ export default class TabContent extends React.Component {
     } else {
       this.getRatedMovies(numPage)
     }
-    // this.getDataMovies(this.state.curSearch, numPage)
-  }
-
-  usualFn() {
-    // const tmdbApi = new TmdbApi()
-    console.log('state for NOOOOW', this.state)
-    // tmdbApi.freeFetch()
-  }
-
-  //for Rated - it's has another (id + word) I take only ids
-  getIdsGenres(genres) {
-    return genres.reduce((newArr, cur) => {
-      newArr.push(cur.id)
-      return newArr
-    }, [])
   }
 
   render() {
@@ -175,18 +135,12 @@ export default class TabContent extends React.Component {
 
     return (
       <div className={classes.tabContainer}>
-        <Button onClick={() => this.usualFn()}>Ghkdf</Button>
-
         {tabNum === 1 && (
           <Input
-            onChange={
-              (e) => this.searchNewMovie(e.target.value)
-              // this.searchNewMovie(e.target.value)
-            }
+            onChange={(e) => this.searchNewMovie(e.target.value)}
             placeholder="Type to search"
           />
         )}
-
         {isLoading && <Spin size="large"></Spin>}
         {hasData && (
           <ul className={classes.moviesList}>
@@ -209,7 +163,7 @@ export default class TabContent extends React.Component {
                     vote_average={vote_average}
                     release_date={release_date}
                     overview={overview}
-                    genres={genre_ids ? genre_ids : this.getIdsGenres(genres)}
+                    genres={genre_ids ? genre_ids : getIdsGenres(genres)}
                     imgPath={poster_path}
                     id={id}
                     key={id}
@@ -224,8 +178,6 @@ export default class TabContent extends React.Component {
             message={errorData.title}
             description={errorData.description}
             type="error"
-            // closable
-            // onClose={onClose}
           />
         )}
         {movies && totalPages === 0 && <Empty />}
