@@ -148,6 +148,7 @@ export default class TabContent extends React.Component {
                     key={id}
                     rating={rating}
                     onNeedUpdate={() => this.setNeedUpdate()}
+                    onHasError={() => this.setState({ hasError: true })}
                   ></Card>
                 )
               })}

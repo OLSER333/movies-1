@@ -27,13 +27,27 @@ export default class Card extends Component {
   changeRate(id, rateNum) {
     // отменяем рейтинг
     if (rateNum === this.state.rate) {
-      this.tmdbApi.deleteMovieRating(id)
-      this.setState({ rate: null })
-      localStorage.removeItem(id)
+      this.tmdbApi
+        .deleteMovieRating(id)
+        .then(() => {
+          this.setState({ rate: null })
+          localStorage.removeItem(id)
+        })
+        .catch((err) => {
+          this.props.onHasError()
+          console.log(err)
+        })
     } else {
-      this.tmdbApi.sendMovieRate(id, rateNum)
-      this.setState({ rate: Number(rateNum) })
-      localStorage.setItem(id, rateNum)
+      this.tmdbApi
+        .sendMovieRate(id, rateNum)
+        .then(() => {
+          this.setState({ rate: Number(rateNum) })
+          localStorage.setItem(id, rateNum)
+        })
+        .catch((err) => {
+          this.props.onHasError()
+          console.log(err)
+        })
     }
     this.props.onNeedUpdate()
   }
