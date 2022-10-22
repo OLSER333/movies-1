@@ -1,5 +1,4 @@
 import React from 'react'
-//==================================================================
 import { Input, Pagination, Spin, Empty, Alert } from 'antd'
 import '../../assets/styles/global.css'
 import '../../assets/styles/null.scss'
@@ -24,35 +23,26 @@ export default class TabContent extends React.Component {
   }
 
   componentDidMount() {
-    console.log('help2')
     this.setState({ tabNum: this.props.tabNum })
     this.updateTab()
   }
 
   componentDidUpdate(prevProps) {
-    console.log('want update tabNum', this.props.tabNum)
-    // eslint-disable-next-line no-undef
     if (this.props.needUpdate !== prevProps.needUpdate) {
-      this.updateTab()
+      if (this.props.tabNum === 1) {
+        this.updateTab()
+      } else if (this.props.tabNum === 2) {
+        this.updateTab()
+      }
     }
-    // if (this.props.needUpdate !== prevProps.needUpdate) {
-    // this.updateTab()
-    // }
   }
 
   updateTab() {
     this.setState({ isLoading: true, movies: null })
-
     this.getDataMovies(this.state.curSearch, this.state.curPage) // was 1
-    // if (this.props.tabNum === 1) {
-    // }
-    // else if (this.props.tabNum === 2) {
-    //   this.getRatedMovies(this.state.curPage) // was 1
-    // }
   }
 
   getDataMovies(searchedTitle, page = 1) {
-    console.log('help4, this ', this.state.tabNum)
     const tmdbApi = new TmdbApi()
     if (this.state.tabNum === 1) {
       if (searchedTitle !== '') {
@@ -61,20 +51,20 @@ export default class TabContent extends React.Component {
           .then((data) => this.setData(data))
           .catch(() => this.onError())
       } else {
-        console.log('help3')
         tmdbApi
           .getTopMovies(page)
           .then((data) => this.setData(data))
           .catch(() => this.onError())
       }
+      localStorage.setItem('needUpdSearched', '0')
     } else if (this.state.tabNum === 2) {
       tmdbApi
-        .getRatedMovies2()
+        .getRatedMovies()
         .then((data) => {
-          console.log('rated', data)
           this.setData(data)
         })
         .catch(() => this.onError())
+      localStorage.setItem('needUpdRated', '0')
     }
   }
 
@@ -92,7 +82,6 @@ export default class TabContent extends React.Component {
     })
     this.setState({ isLoading: false })
   }
-
   // ==================================================================
   searchNewMovie = _debounce((title) => {
     this.setState({ curSearch: title, isLoading: true, movies: null })
@@ -103,6 +92,12 @@ export default class TabContent extends React.Component {
   goToPagPage(numPage) {
     this.setState({ curPage: numPage, isLoading: true, movies: null })
     this.getDataMovies(this.state.curSearch, numPage)
+  }
+
+  setNeedUpdate() {
+    this.state.tabNum === 1
+      ? localStorage.setItem('needUpdRated', '1')
+      : localStorage.setItem('needUpdSearched', '1')
   }
 
   render() {
@@ -125,7 +120,6 @@ export default class TabContent extends React.Component {
             placeholder="Type to search"
           />
         )}
-        {/*// компонент*/}
         {isLoading && <Spin size="large"></Spin>}
         {hasData && (
           <ul className={classes.moviesList}>
@@ -153,7 +147,7 @@ export default class TabContent extends React.Component {
                     id={id}
                     key={id}
                     rating={rating}
-                    onNeedUpdate={() => this.props.onNeedUpdate()}
+                    onNeedUpdate={() => this.setNeedUpdate()}
                   ></Card>
                 )
               })}

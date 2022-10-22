@@ -8,10 +8,8 @@ import { GenresContext } from '../GenresContext/GenresContext'
 import classes from './App.module.scss'
 export default class App extends Component {
   state = {
-    shouldUpdateRated: false,
-    shouldUpdateSearched: false,
     genresList: null,
-    updaterSearch: false,
+    updaterSearched: false,
     updaterRated: false,
   }
 
@@ -24,96 +22,60 @@ export default class App extends Component {
       })
     }
 
-    // this.setState({ ratedIds: Object.entries(localStorage) })
+    localStorage.setItem('needUpdRated', '0')
+    localStorage.setItem('needUpdSearched', '0')
+
     this.tmdbApi.getGenres().then((data) => {
       this.setState({ genresList: data })
     })
   }
 
   changeTabTo(newActiveTab) {
-    console.log('changeTO', newActiveTab)
-    if (newActiveTab === 1) {
-      if (this.state.shouldUpdateSearched !== this.state.updaterSearch) {
-        this.setState((prevState) => {
-          return {
-            ...prevState,
-            updaterSearch: !prevState.updaterSearch,
-          }
-        })
-      }
-    }
-
-    if (newActiveTab === 2) {
-      if (this.state.shouldUpdateRated !== this.state.updaterRated) {
-        this.setState((prevState) => {
-          return {
-            ...prevState,
-            updaterRated: !prevState.updaterRated,
-          }
-        })
-      }
-    }
-  }
-
-  setShouldUpdate(changingFrom) {
-    console.log('changing from ', changingFrom)
-    if (changingFrom === 1) {
+    if (
+      newActiveTab === '1' &&
+      localStorage.getItem('needUpdSearched') === '1'
+    ) {
       this.setState((prevState) => {
         return {
           ...prevState,
-          shouldUpdateRated: !prevState.shouldUpdateRated,
+          updaterSearched: !prevState.updaterSearched,
         }
       })
     }
-    if (changingFrom === 2) {
+
+    if (newActiveTab === '2' && localStorage.getItem('needUpdRated') === '1') {
       this.setState((prevState) => {
         return {
           ...prevState,
-          shouldUpdateSearched: !prevState.shouldUpdateSearched,
+          updaterRated: !prevState.updaterRated,
         }
       })
     }
   }
 
   render() {
-    // needUpdate={this.state.shouldUpdateSearched}
-    // needUpdate={this.state.shouldUpdateRated}
     const items = [
       {
         label: 'Search',
         key: '1',
         children: (
-          <TabContent
-            tabNum={1}
-            onNeedUpdate={() => this.setShouldUpdate(1)}
-            needUpdate={this.state.updaterSearch}
-          />
+          <TabContent tabNum={1} needUpdate={this.state.updaterSearched} />
         ),
       }, // remember to pass the key prop
       {
         label: 'Rated',
         key: '2',
         children: (
-          <TabContent
-            tabNum={2}
-            onNeedUpdate={() => this.setShouldUpdate(2)}
-            needUpdate={this.state.updaterRated}
-          />
+          <TabContent tabNum={2} needUpdate={this.state.updaterRated} />
         ),
       },
     ]
-    const spinStyle = {
-      height: '100vh',
-      display: 'grid',
-      justifyContent: 'center',
-      alignItems: 'center',
-    }
 
     return (
       <GenresContext.Provider value={this.state.genresList}>
         <div className={classes.container}>
           {!this.state.genresList ? (
-            <Spin size="large" style={spinStyle}></Spin>
+            <Spin size="large" style={classes.mainSpiner}></Spin>
           ) : (
             <>
               <Tabs

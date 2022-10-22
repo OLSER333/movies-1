@@ -22,13 +22,6 @@ export default class Card extends Component {
       rate:
         this.props.rating || Number(localStorage.getItem(this.props.id)) || 0,
     })
-    // this.setState({ rate: Number(localStorage.getItem(this.props.id)) })
-  }
-
-  componentDidUpdate() {
-    // if (prevProps.userRate !== this.props.userRate) {
-    // this.setState({ rate: Number(this.props.userRate) })
-    // }
   }
 
   changeRate(id, rateNum) {
@@ -50,7 +43,6 @@ export default class Card extends Component {
       this.props
     return (
       <GenresContext.Consumer>
-        {/* eslint-disable-next-line no-unused-vars */}
         {(genresList) => (
           <div className={classes.card}>
             <div className={classes.cardImg}>
