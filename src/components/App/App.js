@@ -15,7 +15,6 @@ export default class App extends Component {
 
   tmdbApi = new TmdbApi()
   componentDidMount() {
-    console.log('help')
     if (!localStorage.getItem('tmdb_guest_session_id')) {
       this.tmdbApi.getGuestSessionId().then((data) => {
         localStorage.setItem('tmdb_guest_session_id', data.guest_session_id)
