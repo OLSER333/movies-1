@@ -6,6 +6,7 @@ import '../../assets/styles/global.css'
 import posterDefault from '../../assets/images/no-poster.png'
 import { GenresContext } from '../GenresContext/GenresContext'
 import { getColor, getCroppedView } from '../../utils/utils'
+import TmdbApi from '../../services/TmdbApi'
 
 import classes from './Card.module.scss'
 
@@ -14,25 +15,34 @@ export default class Card extends Component {
     rate: null,
   }
 
+  tmdbApi = new TmdbApi()
+
   componentDidMount() {
-    this.setState({ rate: Number(localStorage.getItem(this.props.id)) })
+    this.setState({
+      rate:
+        this.props.rating || Number(localStorage.getItem(this.props.id)) || 0,
+    })
+    // this.setState({ rate: Number(localStorage.getItem(this.props.id)) })
   }
 
-  componentDidUpdate(prevProps) {
-    if (prevProps.userRate !== this.props.userRate) {
-      this.setState({ rate: Number(this.props.userRate) })
-    }
+  componentDidUpdate() {
+    // if (prevProps.userRate !== this.props.userRate) {
+    // this.setState({ rate: Number(this.props.userRate) })
+    // }
   }
 
   changeRate(id, rateNum) {
-    //отменяем рейтинг
+    // отменяем рейтинг
     if (rateNum === this.state.rate) {
-      localStorage.removeItem(`${id}`)
-      this.setState({ rate: 0 })
+      this.tmdbApi.deleteMovieRating(id)
+      this.setState({ rate: null })
+      localStorage.removeItem(id)
     } else {
-      localStorage.setItem(id, `${rateNum}`)
-      this.setState({ rate: Number(localStorage.getItem(id)) })
+      this.tmdbApi.sendMovieRate(id, rateNum)
+      this.setState({ rate: Number(rateNum) })
+      localStorage.setItem(id, rateNum)
     }
+    this.props.onNeedUpdate()
   }
 
   render() {
