@@ -32,10 +32,9 @@ export default class App extends Component {
     this.tmdbApi
       .getGenres()
       .then((data) => {
-        this.setState({ genresList: data })
+        this.setState({ genresList: data, isLoading: false })
       })
       .catch(() => this.onError())
-    this.setState({ isLoading: false })
   }
 
   onError() {
