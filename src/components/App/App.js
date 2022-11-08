@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Spin, Tabs } from 'antd'
+import { Alert, Spin, Tabs } from 'antd'
 
 import TabContent from '../TabContent/TabContent'
 import TmdbApi from '../../services/TmdbApi'
@@ -11,21 +11,36 @@ export default class App extends Component {
     genresList: null,
     updaterSearched: false,
     updaterRated: false,
+    isLoading: true,
+    hasError: false,
   }
 
   tmdbApi = new TmdbApi()
   componentDidMount() {
     if (!localStorage.getItem('tmdb_guest_session_id')) {
-      this.tmdbApi.getGuestSessionId().then((data) => {
-        localStorage.setItem('tmdb_guest_session_id', data.guest_session_id)
-      })
+      this.tmdbApi
+        .getGuestSessionId()
+        .then((data) => {
+          localStorage.setItem('tmdb_guest_session_id', data.guest_session_id)
+        })
+        .catch(() => this.onError())
     }
 
     localStorage.setItem('needUpdRated', '0')
     localStorage.setItem('needUpdSearched', '0')
 
-    this.tmdbApi.getGenres().then((data) => {
-      this.setState({ genresList: data })
+    this.tmdbApi
+      .getGenres()
+      .then((data) => {
+        this.setState({ genresList: data })
+      })
+      .catch(() => this.onError())
+  }
+
+  onError() {
+    this.setState({ isLoading: false })
+    this.setState({
+      hasError: true,
     })
   }
 
@@ -70,18 +85,33 @@ export default class App extends Component {
       },
     ]
 
+    const errorData = {
+      title: 'Something went wrong!',
+      description: 'Try to reload page or use VPN',
+    }
+
+    const hasData = !this.state.isLoading && !this.state.hasError
+
     return (
       <GenresContext.Provider value={this.state.genresList}>
         <div className={classes.container}>
-          {!this.state.genresList ? (
+          {this.state.isLoading && (
             <Spin size="large" style={classes.mainSpiner}></Spin>
-          ) : (
+          )}
+          {hasData && (
             <>
               <Tabs
                 onChange={(activeTab) => this.changeTabTo(activeTab)}
                 items={items}
               />
             </>
+          )}
+          {this.state.hasError && (
+            <Alert
+              message={errorData.title}
+              description={errorData.description}
+              type="error"
+            />
           )}
         </div>
       </GenresContext.Provider>
