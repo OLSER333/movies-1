@@ -1,4 +1,4 @@
-# https://movies-1.vercel.app/
+# https://movies-1.vercel.app/ - приложение
 
 ## Getting Started with Create React App
 
