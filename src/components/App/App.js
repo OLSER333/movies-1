@@ -35,6 +35,7 @@ export default class App extends Component {
         this.setState({ genresList: data })
       })
       .catch(() => this.onError())
+    this.setState({ isLoading: false })
   }
 
   onError() {
